@@ -1,0 +1,28 @@
+/* Glassmorphism effect */
+.glass { /* Semi-transparent white */
+  border-radius: 15px; /* Rounded corners */
+  
+}
+
+/* Soft UI colors */
+.step-button {
+  background-color: rgba(255, 255, 255, 0.2); /* Soft white */
+  color: #333; /* Dark text */
+  border-radius: 10px; /* Rounded corners */
+  padding: 10px 20px; /* Padding */
+  transition: background-color 0.3s ease; /* Smooth transition */
+  margin-top: 20px;
+}
+
+.step-button:hover {
+  background-color: rgba(255, 255, 255, 0.3); /* Slightly darker on hover */
+}
+
+.step-indicator {
+  background-color: rgba(100, 165, 234, 0.5); /* Soft white for indicators */
+  color: #333; /* Dark text */
+}
+
+.step-connector {
+  background-color: rgba(255, 255, 255, 0.3); /* Soft white for connectors */
+}

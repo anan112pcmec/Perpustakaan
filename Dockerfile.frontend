@@ -1,0 +1,30 @@
+FROM node:22-alpine
+
+WORKDIR /Perpustakaan
+
+# Salin file yang berkaitan dengan dependensi terlebih dahulu
+COPY package*.json ./
+RUN npm install
+
+# Salin hanya file dan folder frontend
+COPY .gitignore ./
+COPY buku.html ./
+COPY eslint.config.js ./
+COPY index.html ./
+COPY README.md ./
+COPY Starbg.css ./
+COPY Starbg.js ./
+COPY tsconfig.app.json ./
+COPY tsconfig.json ./
+COPY tsconfig.node.json ./
+COPY vite.config.ts ./
+
+# Folder
+COPY public ./public
+COPY src ./src
+
+# Jalankan di port Vite
+EXPOSE 5173
+
+# Jalankan dev server dan izinkan koneksi luar
+CMD ["npm", "run", "dev", "--", "--host"]
