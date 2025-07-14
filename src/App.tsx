@@ -25,6 +25,10 @@ import Dock from './React_bits_compo/Dock/Dock';
 import { animate } from 'animejs';
 import CardProduk from './CardProduk';
 import Header from './Header';
+import WebSocketTester from './WsButton';
+import PostFloodTester from './Postbtn';
+import BadRequestTester from './XSSattack';
+import ServiceCard from './ServiceCompo';
 
 
 
@@ -308,10 +312,19 @@ export default function App() {
   // bisa ditambah lagi serupa
 ];
 
+const DataService = [
+  {
+    icon: "gambar/gambarPelayanan.png",
+    namaservice: "Pelayanan",
+    deskripsi: "Pelayanan Kami Bertujuan Untuk Membantu Seluruh Pengguna Aplikasi dan yang terhubung dengan sistem Kami"
+  },
+]
+
 
  
   return (
   <>
+  
     {/* Particles sebagai background */}
     {/* Particles Background Interactive */}
     <div
@@ -449,6 +462,13 @@ export default function App() {
               >
                 <i className="fa-solid fa-headset ml-3"></i> <span className='ml-2'>Service Kami</span>
               </div>
+
+                {DataService.map((item, index) => (
+                    <SwiperSlide key={index}>
+                      <ServiceCard {...item}/>
+                    </SwiperSlide>
+                  ))}
+
 
 
             </Card>
@@ -722,11 +742,14 @@ export default function App() {
           Komunitas ini mendorong kebiasaan membaca yang konsisten, akses edukasi yang terbuka, serta menyediakan ruang untuk berbagi rekomendasi buku, berdiskusi, dan berbagi pengalaman.
         </span>
         
-        <span>
-          Dengan membangun kolaborasi dan semangat cinta terhadap pengetahuan, kami berharap bisa membentuk generasi yang haus belajar, berpikiran terbuka, dan berdaya saing tinggi.
+        <span>          Dengan membangun kolaborasi dan semangat cinta terhadap pengetahuan, kami berharap bisa membentuk generasi yang haus belajar, berpikiran terbuka, dan berdaya saing tinggi.
         </span>
 
+        
+
       </div>
+
+      
     </div>
   </div>
 
