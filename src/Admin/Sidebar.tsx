@@ -1,19 +1,9 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Link } from "react-router";
-import { masukanhalaman } from "./AdminState/Halaman";
+
 
 
 
 export const Sidebar = () => {
-
-    const dispatch = useDispatch();
-
-     useEffect(() => {
-        dispatch(masukanhalaman("Mantap"))
-    }, []);
-
-
 
     return (
         <div style={{ fontFamily: "Inter, sans-serif" }}>
@@ -21,7 +11,7 @@ export const Sidebar = () => {
             {/* Header */}
             <div className="flex items-center mt-5">
                 <i className="fas fa-table text-xl mr-2 text-gray-700" />
-                <span className="font-semibold text-lg text-gray-700">Soft UI Dashboard 3</span>
+                <span className="font-semibold text-lg text-gray-700">Perpustakaan Faiz</span>
             </div>
 
             {/* Divider */}
@@ -50,16 +40,20 @@ export const Sidebar = () => {
                 </Link>
 
                 {/* Anggota */}
-                <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
-                    <i className="fas fa-users text-gray-600 mr-3"></i>
-                    <span className="text-gray-700 font-medium">Manajemen Anggota</span>
-                </a>
+                 <Link to="/admin/manajemenanggota">
+                    <a  className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
+                        <i className="fas fa-users text-gray-600 mr-3"></i>
+                        <span className="text-gray-700 font-medium">Manajemen Anggota</span>
+                    </a>
+                 </Link>
 
                 {/* Peminjaman */}
-                <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
+                <Link to="/admin/peminjamanbuku">
+                <a className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
                     <i className="fas fa-arrow-right text-gray-600 mr-3"></i>
                     <span className="text-gray-700 font-medium">Peminjaman Buku</span>
                 </a>
+                </Link>
 
                 {/* Pengembalian */}
                 <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">

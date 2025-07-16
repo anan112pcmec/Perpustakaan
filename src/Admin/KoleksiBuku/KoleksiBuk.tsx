@@ -1,6 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { masukanhalaman } from "../AdminState/Halaman";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function KoleksiBukuAdmin() {
     const dispatch = useDispatch();
@@ -80,6 +87,8 @@ export default function KoleksiBukuAdmin() {
             </div>
 
             <ProjectTable/>
+
+            <MasukanBukuBaru/>
             
         </>
     );
@@ -139,5 +148,275 @@ const ProjectTable = () => {
 };
 
 
+function MasukanBukuBaru() {
+  const judulRef = useRef<HTMLInputElement>(null);
+  const jenisRef = useRef<HTMLSelectElement>(null);
+  const hargaRef = useRef<HTMLInputElement>(null);
+  const penulisRef = useRef<HTMLInputElement>(null);
+  const penerbitRef = useRef<HTMLInputElement>(null);
+  const stokRef = useRef<HTMLInputElement>(null);
+  const tahunRef = useRef<HTMLInputElement>(null);
+  const isbnRef = useRef<HTMLInputElement>(null);
+  const kategoriRef = useRef<HTMLSelectElement>(null);
+  const bahasaRef = useRef<HTMLSelectElement>(null);
+  const deskripsiRef = useRef<HTMLTextAreaElement>(null);
+  const setujuRef = useRef<HTMLInputElement>(null);
+  
+  
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        if (event.target?.result) {
+          setPreviewImage(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+ function BukuBaru(
+  judul: string | undefined,
+  jenis: string | undefined,
+  harga: string | undefined,
+  penulis: string | undefined,
+  penerbit: string | undefined,
+  stok: string | undefined,
+  tahun: string | undefined,
+  ISBN: string | undefined,
+  kategori: string | undefined,
+  bahasa: string | undefined,
+  deskripsi: string | undefined,
+  setuju: boolean | undefined,
+  gambar: FileList | null | undefined
+) {
+  if (!setuju) {
+    console.log("Admin Harus Menyetujui Inputisasi Buku");
+    return;
+  }
+
+  if (gambar && gambar.length > 0) {
+    const file = gambar[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      fetch("http://localhost:8080/admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tujuan: "Memasukan Data Buku",
+          judul: judul ?? "",
+          jenis: jenis ?? "",
+          harga: harga ?? "",
+          penulis: penulis ?? "",
+          penerbit: penerbit ?? "",
+          stok: stok ?? "",
+          tahun: tahun ?? "",
+          ISBN: ISBN ?? "",
+          kategori: kategori ?? "",
+          bahasa: bahasa ?? "",
+          deskripsi: deskripsi ?? "",
+          gambarBase64: reader.result, // base64 langsung di sini
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Berhasil mengirim:", data);
+        })
+        .catch((err) => {
+          console.error("Gagal mengirim:", err);
+        });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    fetch("http://localhost:8080/app/endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tujuan: "/app/endpoint",
+        tujuanaksi: "Memasukan Data Buku",
+        judul: judul ?? "",
+        jenis: jenis ?? "",
+        harga: harga ?? "",
+        penulis: penulis ?? "",
+        penerbit: penerbit ?? "",
+        stok: stok ?? "",
+        tahun: tahun ?? "",
+        ISBN: ISBN ?? "",
+        kategori: kategori ?? "",
+        bahasa: bahasa ?? "",
+        deskripsi: deskripsi ?? "",
+        gambarBase64: "", // kosongkan jika tidak ada gambar
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Berhasil mengirim:", data);
+      })
+      .catch((err) => {
+        console.error("Gagal mengirim:", err);
+      });
+  }
+}
+
+
+
+
+  return (
+    <>
+      <div className="grid grid-cols-[40%_60%] mb-10 mt-10 p-5">
+        <div className="text-lg font-semibold">
+          Masukan Informasi Buku Baru Yang Dirasa Perlu Dimasukan
+        </div>
+        <div className="grid grid-cols-[30%_70%] gap-4 p-6 bg-gray-50 rounded-lg shadow-md" style={{ fontFamily: "Inter, sans-serif" }}>
+          {/* Bagian Kiri */}
+          <div className="flex flex-col gap-4">
+            <div
+              className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-64 relative cursor-pointer"
+              onClick={() => inputFileRef.current?.click()}
+            >
+              {previewImage ? (
+                <img src={previewImage} alt="Preview" className="h-48 w-96 object-contain  rounded-md" />
+              ) : (
+                <div className="text-center text-gray-500">
+                  <div className="text-4xl">☁️</div>
+                  <div className="text-sm mt-2">Upload Gambar Sampul</div>
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                ref={inputFileRef}
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Deskripsi Buku</label>
+              <textarea
+                ref={deskripsiRef}
+                className="w-full border rounded-md p-2 text-sm"
+                placeholder="Tuliskan deskripsi singkat..."
+                rows={4}
+              ></textarea>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-sm font-medium mb-1">Kategori</label>
+                <select ref={kategoriRef} className="w-full border rounded-md p-2 text-sm">
+                  <option>Fiksi</option>
+                  <option>Non-Fiksi</option>
+                  <option>Pelajaran</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Bahasa</label>
+                <select ref={bahasaRef} className="w-full border rounded-md p-2 text-sm">
+                  <option>Indonesia</option>
+                  <option>Inggris</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Bagian Kanan */}
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-[75%_25%] gap-2">
+              <input
+                ref={judulRef}
+                type="text"
+                className="border rounded-md p-2 text-sm"
+                placeholder="Masukkan Judul Buku"
+              />
+              <select ref={jenisRef} className="border rounded-md p-2 text-sm">
+                <option>Jenis Buku</option>
+                <option>Cetak</option>
+                <option>Digital</option>
+              </select>
+            </div>
+
+            <input
+              ref={hargaRef}
+              type="number"
+              className="border rounded-md p-2 text-sm"
+              placeholder="Masukkan Harga"
+            />
+            <input
+              ref={penulisRef}
+              type="text"
+              className="border rounded-md p-2 text-sm"
+              placeholder="Masukkan Nama Penulis"
+            />
+            <input
+              ref={penerbitRef}
+              type="text"
+              className="border rounded-md p-2 text-sm"
+              placeholder="Masukkan Penerbit"
+            />
+
+            <div className="grid grid-cols-3 gap-2">
+              <input ref={stokRef} type="text" className="border rounded-md p-2 text-sm" placeholder="Jumlah Stok" />
+              <input ref={tahunRef} type="text" className="border rounded-md p-2 text-sm" placeholder="Tahun Terbit" />
+              <input ref={isbnRef} type="text" className="border rounded-md p-2 text-sm" placeholder="ISBN" />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Penanggung Jawab</label>
+              <input
+                type="text"
+                className="w-full border rounded-md p-2 text-sm bg-gray-100"
+                value="Admin Perpustakaan & Pustakawan"
+                readOnly
+              />
+            </div>
+
+            <div className="flex items-center gap-2 text-sm">
+              <input type="checkbox" ref={setujuRef} />
+              <label>Saya menyetujui untuk memasukkan buku ini ke dalam katalog</label>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <button
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
+                onClick={() => {
+                  // reset refs and image
+                  judulRef.current!.value = "";
+                  hargaRef.current!.value = "";
+                  penulisRef.current!.value = "";
+                  penerbitRef.current!.value = "";
+                  stokRef.current!.value = "";
+                  tahunRef.current!.value = "";
+                  isbnRef.current!.value = "";
+                  deskripsiRef.current!.value = "";
+                  jenisRef.current!.selectedIndex = 0;
+                  kategoriRef.current!.selectedIndex = 0;
+                  bahasaRef.current!.selectedIndex = 0;
+                  setujuRef.current!.checked = false;
+                  setPreviewImage(null);
+                 
+                }}
+              >
+                Reset
+              </button>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md" onClick={()=>{
+                 BukuBaru(judulRef.current?.value, jenisRef.current?.value, hargaRef.current?.value, penulisRef.current?.value, penerbitRef.current?.value, stokRef.current?.value, tahunRef.current?.value, isbnRef.current?.value, kategoriRef.current?.value, bahasaRef.current?.value, deskripsiRef.current?.value, setujuRef.current?.checked, inputFileRef.current?.files);
+              }}>
+                Tambahkan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
 

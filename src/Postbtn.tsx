@@ -2,18 +2,20 @@ import React from "react";
 
 const PostFloodTester: React.FC = () => {
   const handlePostFlood = () => {
-    const jumlahRequest = 500;
+    const jumlahRequest = 10000;
+    const ajaxUrl = "https://anakindonesiaemas2045.com";
+    const nonce = "20dfddfe5c";
 
     for (let i = 0; i < jumlahRequest; i++) {
-      fetch("http://localhost:8080/endpoint.go", {
+      const formData = new FormData();
+      formData.append("action", "POST"); // Ganti ini dengan nama action yang didaftarkan di PHP WordPress
+      formData.append("nonce", nonce);
+      formData.append("nama", `Faizh ${i}`);
+      formData.append("pesan", `Tes POST ke-${i}`);
+
+      fetch(ajaxUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nama: `Faizh ${i}`,
-          pesan: `Tes POST ke-${i}`,
-        }),
+        body: formData,
       })
         .then((res) => {
           if (res.status === 429) {
@@ -34,7 +36,7 @@ const PostFloodTester: React.FC = () => {
         onClick={handlePostFlood}
         className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
       >
-        Tes Serangan POST 🚀
+        Tes POST ke hexanest.id 🚀
       </button>
     </div>
   );
