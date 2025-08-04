@@ -13,29 +13,39 @@ import DashboardAdmin from './Admin/Dashboard.tsx'
 import AdminSwitcher from './Admin/AdminSwitcher.tsx'
 import {configureStore} from '@reduxjs/toolkit'
 import { HalamanTempatAdmin } from './Admin/AdminState/Halaman.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AktivitasKoleksiBuku, ModifikasiBuku } from './Admin/KoleksiBuku/Aktifitas.tsx'
+import { UserInspect } from './Admin/ManajemenAnggota/UserInspectState.tsx'
+
+const queryClient = new QueryClient();
 
 const store = configureStore({
   reducer:{
-    namahalamanadmin: HalamanTempatAdmin.reducer
+    namahalamanadmin: HalamanTempatAdmin.reducer,
+    adminkoleksibuku: AktivitasKoleksiBuku.reducer,
+    modifikasibuku: ModifikasiBuku.reducer,
+    userinspect: UserInspect.reducer
   }
 })
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<App />} />
-        <Route path='store' element={<Store />}>
-          <Route index element={<StoreSwitcher />} />
-          <Route path=':id_Store' element={<StoreSwitcher />} />
-        </Route>
-        <Route path='about' element={<About />} />
-        <Route path='admin' element={<AdminApp/>}>
-          <Route index element={<DashboardAdmin/>}/>
-          <Route path=':adminpage' element={<AdminSwitcher />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<App />} />
+          <Route path='store' element={<Store />}>
+            <Route index element={<StoreSwitcher />} />
+            <Route path=':id_Store' element={<StoreSwitcher />} />
+          </Route>
+          <Route path='about' element={<About />} />
+          <Route path='admin' element={<AdminApp/>}>
+            <Route index element={<DashboardAdmin/>}/>
+            <Route path=':adminpage' element={<AdminSwitcher />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+      </Provider>
+    </QueryClientProvider>
   </StrictMode>
 )

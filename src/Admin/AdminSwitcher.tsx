@@ -3,6 +3,7 @@ import KoleksiBukuAdmin from "./KoleksiBuku/KoleksiBuk"
 import DashboardAdmin from "./Dashboard"
 import ManajemenAnggota from "./ManajemenAnggota/ManajemenAnggota"
 import PeminjamanBuku from "./PeminjamanBuku/PeminjamanBuku"
+import PenjualanBuku from "./PenjualanBuku/PenjualanBuku"
 
 
 export default function AdminSwitcher() {
@@ -21,6 +22,8 @@ export default function AdminSwitcher() {
       return <ManajemenAnggota/>
     case "peminjamanbuku":
       return <PeminjamanBuku/>
+    case "penjualanbuku":
+      return <PenjualanBuku/>
     default:
       return <DashboardAdmin /> // fallback
   }

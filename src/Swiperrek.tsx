@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectFlip, Navigation } from 'swiper/modules';
 import '../node_modules/swiper/swiper.css';
 import '../node_modules/swiper/modules/effect-flip.css';
-import { useState, useEffect, useRef, memo, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { animate } from 'animejs';
 
 export const LoginPage = (props: any) => {
@@ -12,8 +12,6 @@ export const LoginPage = (props: any) => {
   const [Memilih, setMemilih] = useState("");
   const [kirim, setkirimdata] = useState(false);
   const [formtype, setForm] = useState("Login");
-  const Namaisian = useRef(null)
-  const Passwordisian = useRef(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const namainput = useRef<HTMLInputElement>(null);
   const passwordInput = useRef<HTMLInputElement>(null);
@@ -26,6 +24,8 @@ export const LoginPage = (props: any) => {
       setNama(storedNama);
       setPassword(storedPassword);
     }
+
+    console.log(props)
   }, []);
 
 
@@ -58,7 +58,7 @@ export const LoginPage = (props: any) => {
         console.log("Dia mau login");
         console.log("ngirim data");
 
-        fetch("http://localhost:8080/endpoint.go", {
+        fetch("http://localhost:8080/UserAuth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -75,6 +75,7 @@ export const LoginPage = (props: any) => {
                 const status: any = data.status;
                 if (status === "berhasil" && data.data) {
                   setstatlog(true)
+                  console.log(statuslog)
                     const namasah: string = data.data.Nama;
                     const pwsah: string = data.data.Password;
                     console.log(`namanya ${namasah} terkonfirmasi`)
@@ -100,7 +101,7 @@ export const LoginPage = (props: any) => {
         console.log("Dia mau daftar");
         console.log("ngirim data")
 
-                fetch("http://localhost:8080/endpoint.go", {
+                fetch("http://localhost:8080/UserAuth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -266,7 +267,7 @@ export const LoginPage = (props: any) => {
 
 
 
-export default function Swiperrek({ sudah_login, nama, pw }: any) {
+export default function Swiperrek({ sudah_login, nama}: any) {
   const fadeInRef = useRef(null);
   const swiperRef = useRef<any>(null);
   const TeksUtama = useRef<any>(null);
@@ -362,16 +363,7 @@ export default function Swiperrek({ sudah_login, nama, pw }: any) {
   };
 
 
-  function Namajelas() {
-    // Check if nama is not null, not empty, and not undefined
-    if (nama != null && nama !== "" && nama !== undefined) {
-      return nama;
-    } else {
-      return "Teman";
-    }
-  }
-
-  const namanya = Namajelas();
+ 
 
   useEffect(() => {
     const paragraf = document.querySelector('.fade-in p');
@@ -428,7 +420,7 @@ export default function Swiperrek({ sudah_login, nama, pw }: any) {
     });
 
     // Animasi card fitur (fade + slide up stagger)
-    fiturCards.forEach((card, i) => {
+    fiturCards.forEach((card, _) => {
       animate(card, {
         opacity: [0, 1],
         translateY: [40, 0],
@@ -440,7 +432,7 @@ export default function Swiperrek({ sudah_login, nama, pw }: any) {
 
     // Animasi statistik (scale + fade stagger)
     const stats = document.querySelectorAll('.fade-in > section.mt-12 > div');
-    stats.forEach((stat, i) => {
+    stats.forEach((stat, _) => {
       animate(stat, {
         opacity: [0, 1],
         scale: [0.6, 1],
@@ -452,7 +444,7 @@ export default function Swiperrek({ sudah_login, nama, pw }: any) {
 
     // Animasi section "Tentang BiblioVerse"
     const tentangSection = document.querySelectorAll('.fade-in ~ div .text-white');
-    tentangSection.forEach((el, i) => {
+    tentangSection.forEach((el, _) => {
       animate(el, {
         opacity: [0, 1],
         translateY: [30, 0],
@@ -464,7 +456,7 @@ export default function Swiperrek({ sudah_login, nama, pw }: any) {
 
     // Ikon sosial media
     const sosmedIcons = document.querySelectorAll('.fade-in ~ div .flex.gap-4 a');
-    sosmedIcons.forEach((icon, i) => {
+    sosmedIcons.forEach((icon, _) => {
       animate(icon, {
         opacity: [0, 1],
         translateY: [20, 0],

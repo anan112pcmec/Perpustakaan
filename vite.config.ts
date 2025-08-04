@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     host: true, // listen di semua IP (biar ngrok bisa akses)
     allowedHosts: [
-      '59729c0d1cca.ngrok-free.app',
+      'http://localhost/perpustakaan/',
     ],
   },
   

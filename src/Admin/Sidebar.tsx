@@ -55,17 +55,15 @@ export const Sidebar = () => {
                 </a>
                 </Link>
 
-                {/* Pengembalian */}
-                <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
-                    <i className="fas fa-arrow-left text-gray-600 mr-3"></i>
-                    <span className="text-gray-700 font-medium">Pengembalian Buku</span>
-                </a>
+                
 
                 {/* Penjualan Buku */}
-                <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
+                <Link to="/admin/penjualanbuku">
+                <a className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">
                     <i className="fas fa-shopping-cart text-gray-600 mr-3"></i>
                     <span className="text-gray-700 font-medium">Penjualan Buku</span>
                 </a>
+                </Link>
 
                 {/* Transaksi Penjualan */}
                 <a href="#" className="flex items-center bg-white shadow-sm rounded-lg px-3 py-2 hover:bg-gray-100 transition">

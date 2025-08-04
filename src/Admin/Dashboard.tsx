@@ -6,7 +6,7 @@ export default function DashboardAdmin() {
      const dispatch = useDispatch();
 
      useEffect(() => {
-        dispatch(masukanhalaman("Admin / Dashboard"))
+        dispatch(masukanhalaman("Dashboard"))
     }, []);
 
     function getTodayFormattedDate(): string {

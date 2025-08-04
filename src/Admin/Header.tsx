@@ -1,14 +1,13 @@
 interface HeaderProps {
     title: string;
 }
-
 export const Header = ({ title }: HeaderProps) => {
     return (
         <header className="top-0 w-full z-50 h-16 bg-white shadow-md flex items-center px-6 justify-between"
             style={{ fontFamily: "Inter, sans-serif" }}>
             
             {/* Logo atau Judul */}
-            <div className="text-xl font-semibold text-gray-800">
+            <div className="text-xl font-lg text-gray-800">
                 {title}
             </div>
 

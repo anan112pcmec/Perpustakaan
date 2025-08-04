@@ -10,24 +10,10 @@ import CardSwap, { Card } from './React_bits_compo/CardSwap/CardSwap'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from 'swiper/modules';
 import Masonry from './React_bits_compo/Masonry/Masonry';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-   faHouse,
-  faBookOpen,
-  faHistory,
-  faShoppingCart,
-  faSearch,
-  faCogs,
-  faUserCircle,
-  faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import Dock from './React_bits_compo/Dock/Dock';
 import { animate } from 'animejs';
 import CardProduk from './CardProduk';
 import Header from './Header';
-import WebSocketTester from './WsButton';
-import PostFloodTester from './Postbtn';
-import BadRequestTester from './XSSattack';
+
 import ServiceCard from './ServiceCompo';
 
 
@@ -37,7 +23,6 @@ export default function App() {
   const [loginData, setLoginData] = useState<{ sudah_login?: boolean; nama?: any; pw?: any }>({})
   const [namaPengguna, setnamapengguna] = useState("");
   const [pwPengguna, setPasswordpengguna] = useState("");
-  const [ngetest, setngetes] = useState("");
 
   const box1 = useRef(null);
   const box2 = useRef(null);
@@ -67,7 +52,7 @@ export default function App() {
       }
     );
 
-    antara.forEach((box) => {
+    antara.forEach((box:any) => {
       if (box.current) {
         // Atur default state dulu
         box.current.style.opacity = 0;
@@ -151,62 +136,10 @@ export default function App() {
 
     // ... more items
 ];
- const items = [
-  {
-    icon: <FontAwesomeIcon icon={faHouse} className="text-white" />,
-    label: "Beranda",
-    onClick: () => alert("Beranda!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faInfoCircle} className="text-white" />,
-    label: "Tentang Kami",
-    onClick: () => alert("Tentang Kami!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faHistory} className="text-white" />,
-    label: "Sejarah",
-    onClick: () => alert("Sejarah!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faShoppingCart} className="text-white" />,
-    label: "Pembelian",
-    onClick: () => alert("Pembelian!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faSearch} className="text-white" />,
-    label: "Cari Buku",
-    onClick: () => {
-      window.location.href = "store";
-    }
-
-  },
-  {
-    icon: <FontAwesomeIcon icon={faBookOpen} className="text-white" />,
-    label: "Katalog Buku",
-    onClick: () => alert("Katalog Buku!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faUserCircle} className="text-white" />,
-    label: "Akun Saya",
-    onClick: () => alert("Akun Saya!"),
-  },
-  {
-    icon: <FontAwesomeIcon icon={faCogs} className="text-white" />,
-    label: "Pengaturan",
-    onClick: () => alert("Pengaturan!"),
-  },
-];
 
 
-  function Ngetes(nilai:string){
-    setngetes(nilai);
 
-    
-  }
-  useEffect(()=>{
-    console.log("ini ngetesnya" + ngetest)
-  }, [ngetest])
-  
+ 
  useEffect(() => {
     // Ambil data dari localStorage pas awal render
     const savedNama = localStorage.getItem("userNama");
