@@ -58,7 +58,7 @@ export const LoginPage = (props: any) => {
         console.log("Dia mau login");
         console.log("ngirim data");
 
-        fetch("http://localhost:8080/UserAuth", {
+        fetch("http://localhost:8080/auth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -72,16 +72,20 @@ export const LoginPage = (props: any) => {
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
-                const status: any = data.status;
-                if (status === "berhasil" && data.data) {
+                console.log(data.Hasil);
+                const status: any = data.Hasil.status;
+                if (status === "true" && data.Hasil) {
                   setstatlog(true)
+                  console.log(data)
+                  
                   console.log(statuslog)
-                    const namasah: string = data.data.Nama;
-                    const pwsah: string = data.data.Password;
+                    const namasah: string = data.Hasil.Nama;
+                    const pwsah: string = data.Hasil.Password;
                     console.log(`namanya ${namasah} terkonfirmasi`)
                     localStorage.setItem("userNama", namasah || "Teman");
-                    localStorage.setItem("Id_user", data.data.ID || "");
-                    localStorage.setItem("KreditSkor", data.data.Kreditskor || "");
+                    localStorage.setItem("Id_user", data.Hasil.ID || "");
+                    localStorage.setItem("KreditSkor", data.Hasil.KreditSkor || "");
+                    localStorage.setItem("Favorit", data.Hasil.Favorit || "");
                     setNama(namasah || "");
                     localStorage.setItem("userPassword", pwsah || "");
                     setPassword(pwsah || "");

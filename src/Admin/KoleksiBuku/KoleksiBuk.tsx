@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { masukanhalaman } from "../AdminState/Halaman";
 import {
   useQuery,
@@ -7,9 +7,54 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import { animate } from "animejs";
+import { LineChart } from "@mui/x-charts";
+import { UbahPesan } from "./Aktifitas";
+
+const DataInformation = () => {
 
 
+  return(
+    <>
+    <div className="grid grid-cols-[70%_28%] gap-4 mt-5 w-full h-[200px] p-4 bg-white/70 rounded-2xl shadow-inner">
+      <div className="flex items-center justify-center w-full  rounded-xl shadow-md">
+       
+          <LineChart
+  xAxis={[
+    {
+      scaleType: 'time',
+      data: [
+        new Date('2024-01-01'),
+        new Date('2024-01-02'),
+        new Date('2024-01-03'),
+        new Date('2024-01-04'),
+        new Date('2024-01-05'),
+        new Date('2024-01-06'),
+      ],
+    },
+  ]}
+  series={[
+    {
+      label: 'Buku Masuk',
+      data: [1, 5, 2, 6, 3, 9.3],
+    },
+    {
+      label: 'Buku Keluar',
+      data: [6, 3, 7, 9.5, 4, 2],
+    },
+  ]}
+  
+  height={200}
+/>
+        
+      </div>
+      <div className="flex items-center justify-center bg-white/50 rounded-xl shadow-sm">
+        <span className="text-slate-400 text-sm">[ Keterangan / Info Tambahan Chart ]</span>
+      </div>
+    </div>
 
+    </>
+  )
+}
 
 export default function KoleksiBukuAdmin() {
     const dispatch = useDispatch();
@@ -107,12 +152,6 @@ function BukuTable() {
   const HapusChildHandler = useCallback((dihapus: any, ISBNnya: any) => {
     console.log("📌 Target yang akan dihapus:", dihapus);
     console.log("🔗 Dengan ISBN induk:", ISBNnya);
-
-    let isbndikirim
-
-    if (typeof ISBNnya == "string"){
-      isbndikirim = String(ISBNnya)
-    }
 
     fetch("http://localhost:8080/admin", {
       method: "POST",
@@ -287,8 +326,10 @@ function BukuTable() {
     console.log(hasilDitampilkan);
   }, [dicari]);
 
+  const PesanDimasukan = useSelector((state:any) => state.PesanToast)
+
   const { isPending, error, data } = useQuery({
-    queryKey: ["AmbilDataBukuAdmin"],
+    queryKey: ["AmbilDataBukuAdmin", ToastMessage, PesanDimasukan],
     queryFn: () =>
       fetch("http://localhost:8080/admin", {
         method: "POST",
@@ -516,12 +557,10 @@ function BukuTable() {
   return (
     <>
       <div 
-      className="max-h-[45rem] min-h-[45rem] overflow-y-auto"
-      style={{
-        scrollbarWidth: "none",            // Firefox
-        msOverflowStyle: "none",           // IE/Edge
-      }}>
+      className="max-h-[45rem] min-h-[45rem] "
+      >
         <ToastContainer/>
+        <DataInformation/>
         <div className="flex items-end justify-end mb-5 space-x-3 bg-white/20 backdrop-blur-md p-2 rounded-xl shadow border border-white/30">
             <div className="flex justify-end items-end w-32">
                 <input
@@ -567,88 +606,88 @@ function BukuTable() {
               <tbody className="divide-y divide-gray-200">
                 {groupedData[currentGroupKey].map((buku: any, i: number) => (
                  <tr
-  key={i + 1}
-  ref={(el) => {
-    if (dataBukuRefs.current[i]) dataBukuRefs.current[i] = el;
-  }}
-  data-nama={buku.Judul}
-  data-penulis={buku.Penulis}
-  data-jenis={buku.Jenis}
-  className="transition-all duration-200 hover:bg-white/40 bg-white/20 backdrop-blur-md border-b border-white/20 text-slate-700"
-  style={{ fontFamily: "'Inter', sans-serif" }}
->
-  {/* Kolom Nomor & Penulis */}
-  <td className="px-4 py-4 font-semibold align-top">
-    {i + 1}
-    <div className="text-xs text-slate-500 mt-1">{buku.Penulis}</div>
-  </td>
+                    key={i + 1}
+                    ref={(el) => {
+                      if (dataBukuRefs.current[i]) dataBukuRefs.current[i] = el;
+                    }}
+                    data-nama={buku.Judul}
+                    data-penulis={buku.Penulis}
+                    data-jenis={buku.Jenis}
+                    className="transition-all duration-200 hover:bg-white/40 bg-white/20 backdrop-blur-md border-b border-white/20 text-slate-700"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                  >
+                    {/* Kolom Nomor & Penulis */}
+                    <td className="px-4 py-4 font-semibold align-top">
+                      {i + 1}
+                      <div className="text-xs text-slate-500 mt-1">{buku.Penulis}</div>
+                    </td>
 
-  {/* Kolom Gambar */}
-  <td className="px-4 py-4">
-    <img
-      src={buku.Gambar}
-      alt="Cover Buku"
-      className="w-20 h-20 object-contain rounded-lg shadow-sm border border-white/30"
-    />
-  </td>
+                    {/* Kolom Gambar */}
+                    <td className="px-4 py-4">
+                      <img
+                        src={buku.Gambar}
+                        alt="Cover Buku"
+                        className="w-20 h-20 object-contain rounded-lg shadow-sm border border-white/30"
+                      />
+                    </td>
 
-  {/* Kolom Judul & ISBN */}
-  <td className="px-4 py-4 align-top">
-    <div className="font-semibold text-slate-800">{buku.Judul}</div>
-    <div className="text-xs text-slate-500 mt-1">ISBN: {buku.ISBN}</div>
-  </td>
+                    {/* Kolom Judul & ISBN */}
+                    <td className="px-4 py-4 align-top">
+                      <div className="font-semibold text-slate-800">{buku.Judul}</div>
+                      <div className="text-xs text-slate-500 mt-1">ISBN: {buku.ISBN}</div>
+                    </td>
 
-  {/* Kolom Jenis */}
-  <td className="px-4 py-4 text-sm text-slate-700">{buku.Jenis}</td>
+                    {/* Kolom Jenis */}
+                    <td className="px-4 py-4 text-sm text-slate-700">{buku.Jenis}</td>
 
-  {/* Kolom CreatedAt */}
-  <td className="px-4 py-4 text-sm text-slate-600">
-    {new Date(buku.CreatedAt).toLocaleDateString()}
-  </td>
+                    {/* Kolom CreatedAt */}
+                    <td className="px-4 py-4 text-sm text-slate-600">
+                      {new Date(buku.CreatedAt).toLocaleDateString()}
+                    </td>
 
-  {/* Kolom UpdatedAt */}
-  <td className="px-4 py-4 text-sm text-slate-600">
-    {new Date(buku.UpdatedAt).toLocaleDateString()}
-  </td>
+                    {/* Kolom UpdatedAt */}
+                    <td className="px-4 py-4 text-sm text-slate-600">
+                      {new Date(buku.UpdatedAt).toLocaleDateString()}
+                    </td>
 
-  {/* Kolom Status */}
-  <td className="px-4 py-4">
-    <span
-      className={`text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm transition ${
-        i % 2 === 0 ? "bg-yellow-500" : "bg-green-500"
-      }`}
-    >
-      {i % 2 === 0 ? "Dipinjam" : "Tersedia"}
-    </span>
-  </td>
+                    {/* Kolom Status */}
+                    <td className="px-4 py-4">
+                      <span
+                        className={`text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm transition ${
+                          i % 2 === 0 ? "bg-yellow-500" : "bg-green-500"
+                        }`}
+                      >
+                        {i % 2 === 0 ? "Dipinjam" : "Tersedia"}
+                      </span>
+                    </td>
 
-  {/* Kolom Aksi */}
-  <td className="px-4 py-4">
-    <button
-      onClick={() => {
-        setDataBuku(buku);
-        setPreviewGambar(buku.Gambar);
-        setgamberbukuedit(null);
-        setcommit((prev) => prev + 1);
-        console.log("Data buku diset:", buku);
-      }}
-      className="text-blue-600 font-semibold text-sm hover:underline hover:text-blue-700 transition-all"
-    >
-      Detail
-    </button>
-  </td>
-</tr>
-
+                    {/* Kolom Aksi */}
+                    <td className="px-4 py-4">
+                      <button
+                        onClick={() => {
+                          setDataBuku(buku);
+                          setPreviewGambar(buku.Gambar);
+                          setgamberbukuedit(null);
+                          setcommit((prev) => prev + 1);
+                          console.log("Data buku diset:", buku);
+                        }}
+                        className="text-blue-600 font-semibold text-sm hover:underline hover:text-blue-700 transition-all"
+                      >
+                        Detail
+                      </button>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
           {/* Kanan: Card Detail */}
-          <div ref={BukuSlide} className="max-h-[39rem] min-h-[39rem] overflow-y-auto">
+          <div ref={BukuSlide} className="max-h-[39rem] min-h-[39rem]">
             <Swiper className="mySwiper">
               <SwiperSlide>
-                 <div id="ElemenEdit" className="ml-5 h-full bg-slate-100/60 border border-white/30 rounded-2xl shadow-xl p-6 backdrop-blur-md space-y-6 text-gray-700 ring-1 ring-slate-200/50">
+                {dataBuku.ISBN && dataBuku.Judul ? (
+                  <div id="ElemenEdit" className="ml-5 h-full bg-slate-100/60 border border-white/30 rounded-2xl shadow-xl p-6 backdrop-blur-md space-y-6 text-gray-700 ring-1 ring-slate-200/50">
                   <div className="grid grid-cols-2">
                     <div className="flex justify-start items-start">
                       <p className="text-2xl font-semibold text-slate-800">Edit Buku</p>
@@ -853,7 +892,18 @@ function BukuTable() {
                     />
                   </div>
                 </div>
+                ) : (
+                 <div className="flex items-center justify-center h-full w-full">
+                      <div className="flex flex-col items-center justify-center text-center space-y-4 mt-32">
+                        <i className="fa-solid fa-book text-6xl text-slate-500"></i>
+                        <span className="text-base md:text-lg text-slate-600 font-medium">
+                          Cari buku yang ingin kamu lihat terlebih dahulu
+                        </span>
+                      </div>
+                  </div>
+                )}
               </SwiperSlide>
+
               <SwiperSlide>
                 <div id="ElemenStok">
                 <TableRinci ISBN={dataBuku.ISBN} Judul={dataBuku.Judul} Jenis={dataBuku.Jenis}/>
@@ -889,6 +939,8 @@ function MasukanBukuBaru() {
   const bahasaRef = useRef<HTMLSelectElement>(null);
   const deskripsiRef = useRef<HTMLTextAreaElement>(null);
   const setujuRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch();
   
   
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -949,6 +1001,8 @@ function MasukanBukuBaru() {
     return;
   }
 
+  
+
   if (gambar && gambar.length > 0) {
     const file = gambar[0];
     const reader = new FileReader();
@@ -978,6 +1032,7 @@ function MasukanBukuBaru() {
         .then((data) => {
           console.log("Berhasil mengirim:", data);
           setMessage(data.Hasil);
+          dispatch(UbahPesan(data.Hasil))
           if(data.Hasil){
              judulRef.current!.value = "";
                   hargaRef.current!.value = "";

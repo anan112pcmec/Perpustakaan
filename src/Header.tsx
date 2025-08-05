@@ -26,27 +26,12 @@ export default function Header(){
         onClick: () => alert("Tentang Kami!"),
       },
       {
-        icon: <FontAwesomeIcon icon={faHistory} className="text-white" />,
-        label: "Sejarah",
-        onClick: () => alert("Sejarah!"),
-      },
-      {
-        icon: <FontAwesomeIcon icon={faShoppingCart} className="text-white" />,
-        label: "Pembelian",
-        onClick: () => alert("Pembelian!"),
-      },
-      {
         icon: <FontAwesomeIcon icon={faSearch} className="text-white" />,
         label: "Cari Buku",
         onClick: () => {
           window.location.href = "store";
         }
     
-      },
-      {
-        icon: <FontAwesomeIcon icon={faBookOpen} className="text-white" />,
-        label: "Katalog Buku",
-        onClick: () => alert("Katalog Buku!"),
       },
       {
         icon: <FontAwesomeIcon icon={faUserCircle} className="text-white" />,

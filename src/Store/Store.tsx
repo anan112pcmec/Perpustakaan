@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Particles from "../React_bits_compo/ParticlesBG";
-import Dock from "../React_bits_compo/Dock/Dock";
-import Header from "../Header";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import LeftDock from "../React_bits_compo/Left-Dock/LeftDock";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -66,7 +65,7 @@ export default function Store() {
   },
   {
     icon: (
-      <Link to="/store/barangtrend">
+      <Link to="/store/foryou">
         <FontAwesomeIcon icon={faThumbsUp} className="text-white" />
       </Link>
     ),
@@ -100,13 +99,20 @@ export default function Store() {
     label: "Pembelian",
     onClick: () => alert("Pembelian!"),
   },
+  {
+    icon: 
+      <Link to="/">
+        <FontAwesomeIcon icon={faRightFromBracket} className="text-white"/>
+      </Link>,
+    label: "Kembali",
+  }
 ];
 
 
   
   return (
     <>
-    <div className="fixed inset-0 z-0 pointer-events-auto glow-bg">
+    <div className="fixed inset-0 z-0 pointer-events-auto">
   <ToastContainer />
 
    <div
@@ -131,36 +137,27 @@ export default function Store() {
       />
     </div>
 
-
-  {/* Konten Utama */}
-  <div className="relative z-10 mt-10">
-    <div className="w-full min-h-screen grid grid-rows-[12%_88%]">
-      
-      {/* Row 1 */}
-      <div className="grid grid-cols-[10%_90%]">
-        <div className="p-3"></div>
-        <div className="p-3"><Header/></div>
-      </div>
-
-      {/* Row 2 */}
-      <div className="grid grid-cols-[10%_90%]">
-        <div className="p-3">
+    <div className="relative z-10 ">
+      <div className="w-full min-h-screen flex">
+        
+        {/* Sidebar */}
+        <aside className="flex-shrink-0 min-w-[60px] max-w-[100px] w-full flex justify-center items-start pt-4 mt-20">
           <LeftDock
             items={items}
             panelHeight={68}
             baseItemSize={50}
             magnification={70}
           />
-        </div>
-        <div className="p-3">
-          <div className="text-gray-700 text-sm">
-            <Outlet/>
-          </div>
-        </div>
-      </div>
+        </aside>
+        
+        {/* Konten Utama */}
+        <main className="flex-grow px-4 sm:px-6 md:px-8 text-gray-700 text-sm">
+          <Outlet />
+        </main>
 
+      </div>
     </div>
-  </div>
+
 </div>
 
       

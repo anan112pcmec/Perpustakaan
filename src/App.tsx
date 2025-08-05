@@ -15,6 +15,8 @@ import CardProduk from './CardProduk';
 import Header from './Header';
 
 import ServiceCard from './ServiceCompo';
+import PostFloodTester from './Postbtn';
+import BadRequestTester from './XSSattack';
 
 
 
@@ -678,9 +680,9 @@ const DataService = [
         <span>          Dengan membangun kolaborasi dan semangat cinta terhadap pengetahuan, kami berharap bisa membentuk generasi yang haus belajar, berpikiran terbuka, dan berdaya saing tinggi.
         </span>
 
-        
-
       </div>
+
+      
       
 
       

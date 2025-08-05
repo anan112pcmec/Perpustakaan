@@ -9,6 +9,8 @@ const initialState = {
   KreditSkor: 0,
   BukuDikembalikan: 0,
   BukuBelumDikembalikan: 0,
+  PenggunaAktif: 0,
+  PenggunaTidakAktif: 0,
 };
 
 export const UserInspect = createSlice({
@@ -39,14 +41,22 @@ export const UserInspect = createSlice({
     setBukuBelumdikembalikan: (state, action) => {
       state.BukuBelumDikembalikan = action.payload;
     },
+    setPenggunaAktif: (state, action) => {
+      state.PenggunaAktif = action.payload;
+    },
+    setPenggunaTidakAktif: (state, action) => {
+      state.PenggunaTidakAktif = action.payload
+    },
     setSemua: (state, action) => {
-      const { Nama, Email, Alamat, Status, Bergabung, KreditSkor } = action.payload;
+      const { Nama, Email, Alamat, Status, Bergabung, KreditSkor, PenggunaAktif, PenggunaTidakAktif } = action.payload;
       state.Nama = Nama;
       state.Email = Email;
       state.Alamat = Alamat;
       state.Status = Status;
       state.Bergabung = Bergabung;
       state.KreditSkor = KreditSkor;
+      state.PenggunaAktif = PenggunaAktif;
+      state.PenggunaTidakAktif = PenggunaTidakAktif;
     },
   },
 });
@@ -60,6 +70,8 @@ export const {
   setKreditSkor,
   setBukudikembalikan,
   setBukuBelumdikembalikan,
+  setPenggunaAktif,
+  setPenggunaTidakAktif,
   setSemua,
 } = UserInspect.actions;
 

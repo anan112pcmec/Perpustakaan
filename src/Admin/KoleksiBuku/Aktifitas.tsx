@@ -39,5 +39,17 @@ export const ModifikasiBuku = createSlice({
   },
 });
 
+export const PesanToast = createSlice({
+  name:"pesantoast",
+  initialState: "",
+  reducers: {
+    UbahPesan :(state, action) => {
+      state = action.payload
+    }
+  }
+})
+
+export const {UbahPesan} = PesanToast.actions
+
 // Export action dan reducer-nya
 export const { modifikasiBuku } = ModifikasiBuku.actions;
