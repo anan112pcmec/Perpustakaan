@@ -372,7 +372,9 @@ export default function CariBuku() {
 }
 
 const DisplayBukuNih = () => {
+
   const Slugs = useDispatch();
+  const [Reload, setReload] = useState(0);
   const bukuRef = useRef<(HTMLDivElement | null)[]>([]);
   type Buku = {
     bahasa?: string;
@@ -395,6 +397,7 @@ const DisplayBukuNih = () => {
     updated_at?: string;
     viewed?: number;
     diskon?: number;
+    disukai?:string;
   };
 
   const [dataBuku, setDataBuku] = useState<Buku[]>([]);
@@ -427,12 +430,12 @@ const DisplayBukuNih = () => {
   console.log("nih jud", judul)
 
   const { isLoading, error, data } = useQuery({
-    queryKey: ["AmbilBukuBeranda"],
+    queryKey: ["AmbilBukuBeranda", Reload],
     queryFn: () =>
       fetch("http://localhost:8080/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tujuan: "AmbilBukuScroll", bukanbuku: judul }),
+        body: JSON.stringify({ tujuan: "AmbilBukuScroll", bukanbuku: judul, iduser: `${localStorage.getItem("Id_user")}` }),
       }).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
         return res.json();
@@ -506,8 +509,49 @@ const DisplayBukuNih = () => {
 
                   {/* Love */}
                   <button
-                    className="w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 shadow-md transition-all p-4"
+                    id={`love${buku.isbn}`}
+                    className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${buku.disukai == "buku disukai" ? "text-red-500" : "text-gray-500"} shadow-md transition-all p-4`}
                     title="Love"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // MENCEGAH event bubbling ke parent
+                        console.log(`dia menyukai buku ${buku.judul}`);
+                        fetch("http://localhost:8080/user", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            tujuan: "Favorit",
+                            iduser: `${localStorage.getItem("Id_user")}`,
+                            namabuku: buku.judul,
+                            isbn: `${buku.isbn}`,
+                            namauser: localStorage.getItem("userNama"),
+                          }),
+                        })
+                          .then((res) => {
+                            if (!res.ok) {
+                              throw new Error("Network response was not ok");
+                            }
+                            return res.json(); // hanya panggil sekali dan return ke bawah
+                          })
+                          .then((hasil: any) => {
+                            console.log(hasil.HasilUser);
+                            if(hasil.HasilUser.Kondisi == "Tidak Disukai"){
+                              document.getElementById(`love${buku.isbn}`)?.classList.remove("text-red-500");
+                              document.getElementById(`love${buku.isbn}`)?.classList.add("text-gray-500");
+                            } else if (hasil.HasilUser.Kondisi == "Disukai"){
+                              document.getElementById(`love${buku.isbn}`)?.classList.add("text-red-500");
+                              document.getElementById(`love${buku.isbn}`)?.classList.remove("text-gray-500");
+                            } 
+                            
+                            
+                          })
+                          .catch((err) => {
+                            console.error("Fetch error:", err);
+                          });
+
+                      }}
                   >
                     <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
                   </button>
@@ -883,6 +927,7 @@ const PencarianBukuInit = ({ Dicari }: Dicarinyo) => {
         body: JSON.stringify({
           tujuan: "AmbilDataBukuBerdasarkanPencarian",
           pencarian: Dicari,
+          iduser: `${localStorage.getItem("Id_user")}`,
         }),
       }).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -979,9 +1024,49 @@ const PencarianBukuInit = ({ Dicari }: Dicarinyo) => {
                   </button>
 
                   {/* Love */}
-                  <button
-                    className="w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 shadow-md transition-all p-4"
+                   <button
+                    id={`love${buku.isbn}`}
+                    className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${buku.disukai == "buku disukai" ? "text-red-500" : "text-gray-500"} shadow-md transition-all p-4`}
                     title="Love"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // MENCEGAH event bubbling ke parent
+                        console.log(`dia menyukai buku ${buku.judul}`);
+                        fetch("http://localhost:8080/user", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            tujuan: "Favorit",
+                            iduser: `${localStorage.getItem("Id_user")}`,
+                            namabuku: buku.judul,
+                            isbn: `${buku.isbn}`,
+                            namauser: localStorage.getItem("userNama"),
+                          }),
+                        })
+                          .then((res) => {
+                            if (!res.ok) {
+                              throw new Error("Network response was not ok");
+                            }
+                            return res.json(); // hanya panggil sekali dan return ke bawah
+                          })
+                          .then((hasil: any) => {
+                            console.log(hasil.HasilUser);
+                            if(hasil.HasilUser.Kondisi == "Tidak Disukai"){
+                              document.getElementById(`love${buku.isbn}`)?.classList.remove("text-red-500");
+                              document.getElementById(`love${buku.isbn}`)?.classList.add("text-gray-500");
+                            } else if (hasil.HasilUser.Kondisi == "Disukai"){
+                              document.getElementById(`love${buku.isbn}`)?.classList.add("text-red-500");
+                              document.getElementById(`love${buku.isbn}`)?.classList.remove("text-gray-500");
+                            } 
+                            
+                          })
+                          .catch((err) => {
+                            console.error("Fetch error:", err);
+                          });
+
+                      }}
                   >
                     <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
                   </button>

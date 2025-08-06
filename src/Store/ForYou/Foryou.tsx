@@ -198,6 +198,7 @@ const CardBukunya = ({ Nama, Favorit, Berdasarkan }: CardSwiper) => {
             tujuan: "AmbilBukuFavorit",
             nama: `${Nama}`,
             favoritnya: FavoritAda,
+            iduser: `${localStorage.getItem("Id_user")}`,
         }),
         }).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -396,12 +397,14 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
     updated_at?: string;
     viewed?: number;
     diskon?: number;
+    disukai?:string;
   };
 
   const [DariSampai, setDariSampai] = useState<[number, number]>([0, 8]);
+  console.log("cok cok", localStorage.getItem("Id_user"))
 
     const { isLoading, error, data } = useQuery({
-    queryKey: [`AmbilBukuBerdasar${Favorit}`],
+    queryKey: [`AmbilBukuBerdasar`],
     queryFn: () =>
         fetch("http://localhost:8080/user", {
         method: "POST",
@@ -410,6 +413,8 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
             tujuan: "AmbilBukuFavorit",
             nama: `${Nama}`,
             favoritnya: FavoritAda,
+            iduser: `${localStorage.getItem("Id_user")}`
+            
         }),
         }).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -470,11 +475,52 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
         
                           {/* Love */}
                           <button
-                            className="w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-red-500 shadow-md transition-all p-4"
-                            title="Love"
-                          >
-                            <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
-                          </button>
+                                              id={`love${buku.isbn}`}
+                                              className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${buku.disukai == "buku disukai" ? "text-red-500" : "text-gray-500"} shadow-md transition-all p-4`}
+                                              title="Love"
+                                                onClick={(e) => {
+                                                  e.preventDefault();
+                                                  e.stopPropagation(); // MENCEGAH event bubbling ke parent
+                                                  console.log(`dia menyukai buku ${buku.judul}`);
+                                                  fetch("http://localhost:8080/user", {
+                                                    method: "POST",
+                                                    headers: {
+                                                      "Content-Type": "application/json",
+                                                    },
+                                                    body: JSON.stringify({
+                                                      tujuan: "Favorit",
+                                                      iduser: `${localStorage.getItem("Id_user")}`,
+                                                      namabuku: buku.judul,
+                                                      isbn: `${buku.isbn}`,
+                                                      namauser: localStorage.getItem("userNama"),
+                                                    }),
+                                                  })
+                                                    .then((res) => {
+                                                      if (!res.ok) {
+                                                        throw new Error("Network response was not ok");
+                                                      }
+                                                      return res.json(); // hanya panggil sekali dan return ke bawah
+                                                    })
+                                                    .then((hasil: any) => {
+                                                      console.log(hasil.HasilUser);
+                                                      if(hasil.HasilUser.Kondisi == "Tidak Disukai"){
+                                                        document.getElementById(`love${buku.isbn}`)?.classList.remove("text-red-500");
+                                                        document.getElementById(`love${buku.isbn}`)?.classList.add("text-gray-500");
+                                                      } else if (hasil.HasilUser.Kondisi == "Disukai"){
+                                                        document.getElementById(`love${buku.isbn}`)?.classList.add("text-red-500");
+                                                        document.getElementById(`love${buku.isbn}`)?.classList.remove("text-gray-500");
+                                                      } 
+                                                      
+                                                      
+                                                    })
+                                                    .catch((err) => {
+                                                      console.error("Fetch error:", err);
+                                                    });
+                          
+                                                }}
+                                            >
+                                              <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+                                            </button>
         
                           {/* Comment */}
                           <button

@@ -9,7 +9,6 @@ interface DetilBukuState{
   Tahun: string | null;
   Rating: string | null;
   Harga: string | null;
-
 }
 
 
