@@ -536,7 +536,7 @@ const TableUser = ({initialize}:TableUserProps) => {
     const { isPending, error, data } = useQuery({
     queryKey: ["AmbilDataUserAdmin", String(initialize)],
     queryFn: () =>
-        fetch("http://localhost:8080/admin", {
+        fetch("http://192.168.1.4:8080/admin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -744,7 +744,7 @@ function RiwayatPeminjamanTimeline({nama, email}:PropsRiwayatPeminjaman) {
     const { isPending, error, data } = useQuery({
     queryKey: ["AmbilDataUserRiwayatPeminjaman", nama, email],
     queryFn: () =>
-        fetch("http://localhost:8080/admin", {
+        fetch("http://192.168.1.4:8080/admin", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

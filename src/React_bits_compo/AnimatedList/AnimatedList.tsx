@@ -2,9 +2,9 @@ import React, {
   useRef,
   useState,
   useEffect,
-  ReactNode,
-  MouseEventHandler,
-  UIEvent,
+  type ReactNode,
+  type MouseEventHandler,
+  type UIEvent,
 } from "react";
 import { motion, useInView } from "framer-motion";
 import "./AnimatedList.css";

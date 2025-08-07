@@ -432,7 +432,7 @@ const DisplayBukuNih = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["AmbilBukuBeranda", Reload],
     queryFn: () =>
-      fetch("http://localhost:8080/user", {
+      fetch("http://192.168.1.4:8080/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tujuan: "AmbilBukuScroll", bukanbuku: judul, iduser: `${localStorage.getItem("Id_user")}` }),
@@ -483,6 +483,15 @@ const DisplayBukuNih = () => {
                   Genre: buku.kategori,
                   Bahasa: buku.bahasa,
                   Tahun: buku.tahun,
+                  Harga: buku.harga,
+                  Kategori: buku.kategori,
+                  Jenis: buku.jenis,
+                  Disukai: buku.disukai,
+                  Diskon: buku.diskon,
+                  Penerbit: buku.penerbit,
+                  ISBN: buku.isbn,
+                  Deskripsi: buku.deskripsi,
+                  ID: buku.id,
                 })
               );
             }}
@@ -516,7 +525,7 @@ const DisplayBukuNih = () => {
                         e.preventDefault();
                         e.stopPropagation(); // MENCEGAH event bubbling ke parent
                         console.log(`dia menyukai buku ${buku.judul}`);
-                        fetch("http://localhost:8080/user", {
+                        fetch("http://192.168.1.4:8080/user", {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",
@@ -696,7 +705,7 @@ const ViewingBuku = ({ Berdasarkan }: ViewBuku) => {
   const { isPending, error, data } = useQuery({
     queryKey: ["AmbilDataUserRiwayatPeminjaman", Berdasarkan],
     queryFn: () =>
-      fetch("http://localhost:8080/user", {
+      fetch("http://192.168.1.4:8080/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -921,7 +930,7 @@ const PencarianBukuInit = ({ Dicari }: Dicarinyo) => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["AmbilBukuberdasarkanPencarian", Dicari], 
     queryFn: () =>
-      fetch("http://localhost:8080/user", {
+      fetch("http://192.168.1.4:8080/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -994,11 +1003,18 @@ const PencarianBukuInit = ({ Dicari }: Dicarinyo) => {
                   Judul: buku.judul,
                   Gambar: buku.gambar,
                   Penulis: buku.penulis,
-                  Genre: buku.genre,
+                  Genre: buku.kategori,
                   Bahasa: buku.bahasa,
                   Tahun: buku.tahun,
-                  Rating: buku.rating,
                   Harga: buku.harga,
+                  Kategori: buku.kategori,
+                  Jenis: buku.jenis,
+                  Disukai: buku.disukai,
+                  Diskon: buku.diskon,
+                  Penerbit: buku.penerbit,
+                  ISBN: buku.isbn,
+                  Deskripsi: buku.deskripsi,
+                  ID: buku.id,
                 })
               );
             }}
@@ -1032,7 +1048,7 @@ const PencarianBukuInit = ({ Dicari }: Dicarinyo) => {
                         e.preventDefault();
                         e.stopPropagation(); // MENCEGAH event bubbling ke parent
                         console.log(`dia menyukai buku ${buku.judul}`);
-                        fetch("http://localhost:8080/user", {
+                        fetch("http://192.168.1.4:8080/user", {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",

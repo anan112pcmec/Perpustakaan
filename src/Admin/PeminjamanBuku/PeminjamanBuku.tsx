@@ -116,7 +116,7 @@ const BukuDicariPeminjaman = ({ Dicari }: PropsBukuDicari) => {
     const { isPending, error, data } = useQuery({
         queryKey: ["AmbilDataPeminjaman", Dicari],
         queryFn: () =>
-            fetch("http://localhost:8080/admin", {
+            fetch("http://192.168.1.4:8080/admin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

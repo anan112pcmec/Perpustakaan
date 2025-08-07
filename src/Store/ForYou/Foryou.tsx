@@ -8,10 +8,15 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import LoadingAnimation from "../../lottie/Sandy_Loading.json"
 import { renderLoading } from "../CariBuku/Caribuku";
 import FailureAnimation from "../../lottie/Questions.json"
-import { updatenilai } from "../DetailBuku/DetailBukuState";
+import { updatenilai, type DetilBukuState } from "../DetailBuku/DetailBukuState";
 import { Detailbuku } from "../DetailBuku/DetailBuku";
+import ShinyText from "../../React_bits_compo/ShinyText";
+import AnimatedList from "../../React_bits_compo/AnimatedList/AnimatedList";
+
 
 export default function Foryou(){
+    const [Relevansinya, SetRelevansi] = useState<string>("BaruDilihat")
+    const items = ['Baru Saja Dilihat', 'Paling Banyak Dicari', 'Motivasi', 'Fiksi', 'Non-fiksi', 'Horror', 'Thriller', 'Cetak', 'Digital', 'News']; 
     const [ScrolldownFav, setScrollDownFav] = useState(false);
     console.log(localStorage.getItem("Favorit"), "Nih bro");
     return(
@@ -35,7 +40,7 @@ export default function Foryou(){
               {/* Kiri */}
               <div className="grid grid-rows-[auto_1fr]">
                 <div className="p-4 text-2xl text-neutral-100 font-light" style={{ fontFamily: "Inter, sans-serif" }}>
-                  Favorit
+                  Relevansi
                 </div>
                 <div className="mt-2 flex justify-start items-start w-full">
                   <CardBukunya
@@ -66,19 +71,23 @@ export default function Foryou(){
 
               {/* Tombol Toggle */}
               <div
-                className="text-xl font-medium tracking-wide flex items-center gap-2 cursor-pointer grid grid-cols-[30%_70%]"
+                className={`text-xl tracking-wide flex items-center gap-2 cursor-pointer grid ${ScrolldownFav == false ? "grid-cols-[80%_20%]" : "grid-cols-[30%_70%]" }}`}
                 style={{ fontFamily: 'Inter, sans-serif' }}
 
               >
                 <div className="mt-2"
                 onClick={() => setScrollDownFav(!ScrolldownFav)} >
                 <FontAwesomeIcon icon={faBookBookmark} className="text-lg" />
-                <span className="select-none ml-2">Lihat Favorit</span>
+                <span className="select-none ml-2 font-medium">Lihat Favorit</span>
                 {ScrolldownFav === false ? (
                   <FontAwesomeIcon icon={faSortDown} className="text-base mb-1 ml-2" />
                 ) : (
                   <FontAwesomeIcon icon={faSortUp} className="text-base mt-1 ml-2" />
                 )}
+                {ScrolldownFav == false ? (<span className="ml-2 mb-2 text-sm italic text-neutral-200">
+                  <ShinyText text="Ini adalah daftar buku yang Anda favoritkan — jejak rasa yang pernah menyentuh hati, dan kisah yang ingin selalu Anda kenang." className="text-neutral-200"/>
+                </span>
+                ) : null }
                 </div>
                 
                 {ScrolldownFav == true ? (
@@ -112,37 +121,35 @@ export default function Foryou(){
                     Favorit={localStorage.getItem("Favorit")}
                   />
               </div>
-
+              <hr className="mt-4 border-neutral-600"/>
             </div>
 
 
             {/* Section Baru Baru Ini */}
-            <div className="grid grid-cols-[30%_70%] gap-4">
-              <div className="grid grid-rows-[auto_1fr] w-full">
-                <div className="p-4 text-2xl text-neutral-100 font-light" style={{ fontFamily: "Inter, sans-serif" }}>
-                  Baru Baru Ini
-                </div>
-                <div>{/* Konten baru-baru ini */}</div>
+           <div className="grid grid-cols-[50%_50%] gap-4 w-full mb-10">
+            {/* Kolom Kiri: Baru-Baru Ini */}
+            <div className="grid grid-rows-[auto_1fr] w-full">
+              <div className="p-4 text-2xl text-neutral-100 font-light" style={{ fontFamily: "Inter, sans-serif" }}>
+                Baru-Baru Ini Dilihat
               </div>
-              <div className="grid grid-rows-[10%_90%]">
-                <div></div>
-                <div></div>
+              <div className="px-4">
+                <RelevansiSearch Tipe={Relevansinya}/>
               </div>
             </div>
 
-            {/* Section KJCBAS */}
-            <div className="grid grid-cols-[30%_70%] gap-4">
-              <div className="grid grid-rows-[auto_1fr]">
-                <div className="p-4 text-2xl text-neutral-100 font-light" style={{ fontFamily: "Inter, sans-serif" }}>
-                  KJCBAS
-                </div>
-                <div>{/* Konten KJCBAS */}</div>
-              </div>
-              <div className="grid grid-rows-[10%_90%]">
-                <div></div>
-                <div></div>
+            {/* Kolom Kanan: Buku Yang Disukai */}
+            <div className="grid grid-rows-[auto_1fr]">
+              <div className="w-full flex justify-end mt-20">
+                <AnimatedList
+                  items={items}
+                  onItemSelect={(item, index) => console.log(item, index)}
+                  showGradients={true}
+                  enableArrowNavigation={true}
+                  displayScrollbar={true}
+                />
               </div>
             </div>
+          </div>
           </div>
         </div>
       </>
@@ -191,7 +198,7 @@ const CardBukunya = ({ Nama, Favorit, Berdasarkan }: CardSwiper) => {
     const { isLoading, error, data } = useQuery({
     queryKey: [`AmbilBukuBerdasar${Favorit}`],
     queryFn: () =>
-        fetch("http://localhost:8080/user", {
+        fetch("http://192.168.1.4:8080/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -404,17 +411,15 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
   console.log("cok cok", localStorage.getItem("Id_user"))
 
     const { isLoading, error, data } = useQuery({
-    queryKey: [`AmbilBukuBerdasar`],
+    queryKey: [`AmbilBukuBerdasarFavnya`],
     queryFn: () =>
-        fetch("http://localhost:8080/user", {
+        fetch("http://192.168.1.4:8080/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            tujuan: "AmbilBukuFavorit",
-            nama: `${Nama}`,
-            favoritnya: FavoritAda,
+            tujuan: "AmbilBukuFavoritdia",
+            namauser: `${Nama}`,
             iduser: `${localStorage.getItem("Id_user")}`
-            
         }),
         }).then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
@@ -425,6 +430,8 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
     if (isLoading) return renderLoading("Memuat data...", LoadingAnimation);
 
     if(error) return renderLoading("Jaringan Bermasalah", FailureAnimation)
+
+      console.log(data?.HasilUser);
   
   return (
     <>
@@ -453,6 +460,15 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
                           Genre: buku.kategori,
                           Bahasa: buku.bahasa,
                           Tahun: buku.tahun,
+                          Harga: buku.harga,
+                          Kategori: buku.kategori,
+                          Jenis: buku.jenis,
+                          Disukai: buku.disukai,
+                          Diskon: buku.diskon,
+                          Penerbit: buku.penerbit,
+                          ISBN: buku.isbn,
+                          Deskripsi: buku.deskripsi,
+                          ID: buku.id,
                         })
                       );
                     }}
@@ -475,52 +491,49 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
         
                           {/* Love */}
                           <button
-                                              id={`love${buku.isbn}`}
-                                              className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${buku.disukai == "buku disukai" ? "text-red-500" : "text-gray-500"} shadow-md transition-all p-4`}
-                                              title="Love"
-                                                onClick={(e) => {
-                                                  e.preventDefault();
-                                                  e.stopPropagation(); // MENCEGAH event bubbling ke parent
-                                                  console.log(`dia menyukai buku ${buku.judul}`);
-                                                  fetch("http://localhost:8080/user", {
-                                                    method: "POST",
-                                                    headers: {
-                                                      "Content-Type": "application/json",
-                                                    },
-                                                    body: JSON.stringify({
-                                                      tujuan: "Favorit",
-                                                      iduser: `${localStorage.getItem("Id_user")}`,
-                                                      namabuku: buku.judul,
-                                                      isbn: `${buku.isbn}`,
-                                                      namauser: localStorage.getItem("userNama"),
-                                                    }),
-                                                  })
-                                                    .then((res) => {
-                                                      if (!res.ok) {
-                                                        throw new Error("Network response was not ok");
-                                                      }
-                                                      return res.json(); // hanya panggil sekali dan return ke bawah
-                                                    })
-                                                    .then((hasil: any) => {
-                                                      console.log(hasil.HasilUser);
-                                                      if(hasil.HasilUser.Kondisi == "Tidak Disukai"){
-                                                        document.getElementById(`love${buku.isbn}`)?.classList.remove("text-red-500");
-                                                        document.getElementById(`love${buku.isbn}`)?.classList.add("text-gray-500");
-                                                      } else if (hasil.HasilUser.Kondisi == "Disukai"){
-                                                        document.getElementById(`love${buku.isbn}`)?.classList.add("text-red-500");
-                                                        document.getElementById(`love${buku.isbn}`)?.classList.remove("text-gray-500");
-                                                      } 
-                                                      
-                                                      
-                                                    })
-                                                    .catch((err) => {
-                                                      console.error("Fetch error:", err);
-                                                    });
-                          
-                                                }}
-                                            >
-                                              <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
-                                            </button>
+                            id={`love${buku.isbn}`}
+                            className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${buku.disukai == "buku disukai" ? "text-red-500" : "text-gray-500"} shadow-md transition-all p-4`}
+                            title="Love"
+                              onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation(); // MENCEGAH event bubbling ke parent
+                              console.log(`dia menyukai buku ${buku.judul}`);
+                              fetch("http://192.168.1.4:8080/user", {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  tujuan: "Favorit",
+                                  iduser: `${localStorage.getItem("Id_user")}`,
+                                  namabuku: buku.judul,
+                                  isbn: `${buku.isbn}`,
+                                  namauser: localStorage.getItem("userNama"),
+                                }),
+                              })
+                              .then((res) => {
+                                if (!res.ok) {
+                                  throw new Error("Network response was not ok");
+                                }
+                                 return res.json(); // hanya panggil sekali dan return ke bawah
+                              })
+                              .then((hasil: any) => {
+                                  console.log(hasil.HasilUser);
+                                  if(hasil.HasilUser.Kondisi == "Tidak Disukai"){
+                                    document.getElementById(`love${buku.isbn}`)?.classList.remove("text-red-500");
+                                    document.getElementById(`love${buku.isbn}`)?.classList.add("text-gray-500");
+                                  } else if (hasil.HasilUser.Kondisi == "Disukai"){
+                                    document.getElementById(`love${buku.isbn}`)?.classList.add("text-red-500");
+                                    document.getElementById(`love${buku.isbn}`)?.classList.remove("text-gray-500");
+                                  }                   
+                              })
+                              .catch((err) => {
+                                console.error("Fetch error:", err);
+                              });
+                            }}
+                            >
+                            <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+                          </button>
         
                           {/* Comment */}
                           <button
@@ -599,6 +612,208 @@ const DaftarBukuFavorit = ({Nama, Favorit}: BukuFavorit) => {
           </div>
           </div>
       </div>
+    </>
+  )
+}
+
+interface Relevansi{
+  Tipe: string;
+}
+
+const RelevansiSearch = ({Tipe}:Relevansi) => {
+
+  const Slugs = useDispatch();
+  
+  const { isLoading, error, data } = useQuery({
+    queryKey: [`AmbilRelevansi_${Tipe}`],
+    queryFn: async (): Promise<DetilBukuState[] | any> => {
+      if (Tipe === "BaruDilihat") {
+        const local = localStorage.getItem("PerpustakaanFaiz_BukuBaruBaruIni");
+        return local ? (JSON.parse(local) as DetilBukuState[]) : [];
+      } else {
+        const res = await fetch("http://192.168.1.4:8080/user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tujuan: "AmbilRelevansi",
+            jenisrelevansi: Tipe,
+            iduser: localStorage.getItem("Id_user"),
+          }),
+        });
+
+        if (!res.ok) throw new Error("Network response was not ok");
+
+        const hasil = await res.json();
+        return hasil as any; // Aman, fleksibel
+      }
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  if (isLoading) return renderLoading("Memuat data...", LoadingAnimation);
+
+  if(error) return renderLoading("Jaringan Bermasalah", FailureAnimation);
+
+  if(Tipe == "BaruDilihat") return(
+  <>
+    <div className="h-full w-full flex flex-wrap items-start gap-2 mt-5">
+      {data.map((buku: DetilBukuState, index: number) => (
+        <div
+          key={index}
+          onMouseEnter={(el) => {
+            animate(el.currentTarget, {
+              opacity: [1, 1],
+              scale: [1.05, 1],
+              easing: "easeOutQuart",
+              duration: 700,
+            });
+          }}
+          onClick={() => {
+            console.log("slug jalan");
+            console.log(
+              buku.Judul,
+              buku.Gambar,
+              buku.Penulis,
+              buku.Kategori,
+              buku.Bahasa,
+              buku.Tahun,
+              buku.Rating,
+              buku.Harga
+            );
+
+            Slugs(
+              updatenilai({
+                Judul: buku.Judul,
+                Gambar: buku.Gambar,
+                Penulis: buku.Penulis,
+                Genre: buku.Genre,
+                Bahasa: buku.Bahasa,
+                Tahun: buku.Tahun,
+                Harga: buku.Harga,
+                Kategori: buku.Kategori,
+                Jenis: buku.Jenis,
+                Disukai: buku.Disukai,
+                Diskon: buku.Diskon,
+                Penerbit: buku.Penerbit,
+                ISBN: buku.ISBN,
+                Deskripsi: buku.Deskripsi,
+                ID: buku.ID,
+              })
+            );
+          }}
+          className="buku-card w-[360px] h-[280px] bg-gradient-to-br from-white/10 via-white/20 to-white/10 backdrop-blur-md border border-white/30 rounded-3xl shadow-lg overflow-hidden m-4 transition-transform hover:scale-[1.04] hover:shadow-2xl cursor-pointer flex"
+        >
+          <div className="grid grid-cols-[140px_1fr] h-full">
+            {/* Gambar & Tombol */}
+            <div className="relative flex flex-col bg-white/20 backdrop-blur-sm rounded-l-3xl overflow-hidden p-4">
+              <img
+                src={buku.Gambar}
+                className="object-contain h-[230px] w-[130px] rounded-xl shadow-inner mx-auto"
+              />
+              <div className="flex justify-center gap-2 mt-2">
+                {/* Like */}
+                <button
+                  className="w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-md transition-all p-4"
+                  title="Like"
+                >
+                  <FontAwesomeIcon icon={faThumbsUp} className="w-4 h-4" />
+                </button>
+
+                {/* Love */}
+                <button
+                  id={`lobe${buku.ISBN}`}
+                  className={`w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center ${
+                    buku.Disukai === "buku disukai" ? "text-red-500" : "text-gray-500"
+                  } shadow-md transition-all p-4`}
+                  title="Love"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    fetch("http://192.168.1.4:8080/user", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        tujuan: "Favorit",
+                        iduser: `${localStorage.getItem("Id_user")}`,
+                        namabuku: buku.Judul,
+                        isbn: `${buku.ISBN}`,
+                        namauser: localStorage.getItem("userNama"),
+                      }),
+                    })
+                      .then((res) => {
+                        if (!res.ok) throw new Error("Network response was not ok");
+                        return res.json();
+                      })
+                      .then((hasil: any) => {
+                        if (hasil.HasilUser.Kondisi === "Tidak Disukai") {
+                          document.getElementById(`lobe${buku.ISBN}`)?.classList.remove("text-red-500");
+                          document.getElementById(`lobe${buku.ISBN}`)?.classList.add("text-gray-500");
+                        } else if (hasil.HasilUser.Kondisi === "Disukai") {
+                          document.getElementById(`lobe${buku.ISBN}`)?.classList.add("text-red-500");
+                          document.getElementById(`lobe${buku.ISBN}`)?.classList.remove("text-gray-500");
+                        }
+                      })
+                      .catch((err) => {
+                        console.error("Fetch error:", err);
+                      });
+                  }}
+                >
+                  <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
+                </button>
+
+                {/* Comment */}
+                <button
+                  className="w-9 h-9 bg-white/30 hover:bg-white/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white shadow-md transition-all p-4"
+                  title="Komentar"
+                >
+                  <FontAwesomeIcon icon={faComment} className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Informasi Buku */}
+            <div className="flex flex-col justify-between p-5 text-neutral-100">
+              <div className="space-y-1">
+                <h3 className="text-lg font-bold text-white/90 line-clamp-2">{buku.Judul}</h3>
+                <p className="text-sm text-white/70 font-semibold">Penulis: {buku.Penulis}</p>
+                <p className="text-xs text-white/50 italic tracking-wide">Genre: {buku.Kategori}</p>
+                <p className="text-xs text-white/50">Bahasa: {buku.Bahasa ?? "ID"}</p>
+                <p className="text-xs text-white/50">Tahun: {buku.Tahun}</p>
+                <p className="text-xs text-white/50">
+                  Rating: <span className="font-medium">{buku.Rating ?? "Belum Dinilai"}</span>
+                </p>
+              </div>
+
+              {/* Harga + Diskon */}
+              <div className="mt-4">
+                <button
+                  style={{ fontFamily: "Inter, sans-serif" }}
+                  className="relative px-6 py-2 w-full bg-white/20 hover:bg-white/30 active:bg-teal-700 rounded-xl shadow-lg text-white font-semibold text-sm transition duration-300 ease-in-out flex items-center justify-center"
+                >
+                  <span>Rp.{buku.Harga}</span>
+                  {buku.Diskon && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-2 rounded-full shadow-md font-bold">
+                      {buku.Diskon}%
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              <div className="text-[10px] text-white/30 mt-3 select-none">Katalog Buku Digital</div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+    </div>
+  </>
+  )
+
+
+  return(
+    <>
     </>
   )
 }

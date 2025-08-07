@@ -5,6 +5,7 @@ interface ShinyTextProps {
     disabled?: boolean;
     speed?: number;
     className?: string;
+    gamakeicon?: boolean;
 }
 
 const ShinyText: React.FC<ShinyTextProps> = ({ text, disabled = false, speed = 5, className = '' }) => {
@@ -12,9 +13,9 @@ const ShinyText: React.FC<ShinyTextProps> = ({ text, disabled = false, speed = 5
 
     return (
         <div
-            className={`shiny-text ${disabled ? 'disabled' : ''} ${className} text-lime-300`}
+            className={`shiny-text ${disabled ? 'disabled' : ''} ${className ? className : "text-lime-300"}`}
             style={{ animationDuration }}
-        > <i className='fa-brands fa-uncharted'> </i>
+        > <i className={`${className ? className : "fa-brands fa-uncharted"}`}> </i>
             {" " + text}
         </div>
     );

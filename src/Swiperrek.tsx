@@ -58,7 +58,7 @@ export const LoginPage = (props: any) => {
         console.log("Dia mau login");
         console.log("ngirim data");
 
-        fetch("http://localhost:8080/auth", {
+        fetch("http://192.168.1.4:8080/auth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export const LoginPage = (props: any) => {
         console.log("Dia mau daftar");
         console.log("ngirim data")
 
-                fetch("http://localhost:8080/UserAuth", {
+                fetch("http://192.168.1.4:8080/UserAuth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

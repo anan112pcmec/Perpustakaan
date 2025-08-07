@@ -153,7 +153,7 @@ function BukuTable() {
     console.log("📌 Target yang akan dihapus:", dihapus);
     console.log("🔗 Dengan ISBN induk:", ISBNnya);
 
-    fetch("http://localhost:8080/admin", {
+    fetch("http://192.168.1.4:8080/admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -300,7 +300,7 @@ function BukuTable() {
 
   // Kirim fetch ke backend (ubah URL ke endpoint-mu)
   try {
-    const response = await fetch("http://localhost:8080/admin", {
+    const response = await fetch("http://192.168.1.4:8080/admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -331,7 +331,7 @@ function BukuTable() {
   const { isPending, error, data } = useQuery({
     queryKey: ["AmbilDataBukuAdmin", ToastMessage, PesanDimasukan],
     queryFn: () =>
-      fetch("http://localhost:8080/admin", {
+      fetch("http://192.168.1.4:8080/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -390,7 +390,7 @@ function BukuTable() {
       queryKey: ['AmbilDataBukuDetailed', ISBN, Jenis, Judul],
       enabled: isValidParams, // ⬅️ hanya fetch jika valid
       queryFn: async () => {
-        const response = await fetch('http://localhost:8080/admin', {
+        const response = await fetch('http://192.168.1.4:8080/admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1007,7 +1007,7 @@ function MasukanBukuBaru() {
     const file = gambar[0];
     const reader = new FileReader();
     reader.onload = () => {
-      fetch("http://localhost:8080/admin", {
+      fetch("http://192.168.1.4:8080/admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1055,7 +1055,7 @@ function MasukanBukuBaru() {
     };
     reader.readAsDataURL(file);
   } else {
-    fetch("http://localhost:8080/app/endpoint", {
+    fetch("http://192.168.1.4:8080/app/endpoint", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
