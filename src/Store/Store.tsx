@@ -80,9 +80,10 @@ export default function Store() {
     label: "Dukungan",
   },
   {
-    icon: <FontAwesomeIcon icon={faStar} className="text-white" />,
+    icon: (<Link to="/store/bestseller">
+            <FontAwesomeIcon icon={faBookOpen} className="text-white" />
+          </Link>),
     label: "Best Seller",
-    onClick: () => alert("Best Seller!"),
   },
   {
     icon: <FontAwesomeIcon icon={faHeart} className="text-white" />,
